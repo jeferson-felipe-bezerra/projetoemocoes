@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz das Emoções - Divertida Mente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://img.freepik.com/fotos-gratis/fundo-azul-do-gradiente-de-luxo-abstrato-liso-azul-escuro-com-vinheta-preta-studio-banner_1258-72767.jpg?t=st=1726195728~exp=1726199328~hmac=50b2f08213ad233bf05c22d447fde19b89857e1ac839c4bc8a1904937c996508&w=900");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .image-column, .quiz-column {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .image-column {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-column img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #00796b;
+        }
+
+        .btn-container {
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #004d40;
+        }
+
+        #emotion-img {
+            width: 150px;
+            height: auto;
+            margin: 20px 0;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .next-btn {
+            background-color: #ffcc00;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            display: none;
+            cursor: pointer;
+        }
+
+        .next-btn:hover {
+            background-color: #e6b800;
+        }
+
+        #feedback {
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        footer{
+            text-align: center;
+            color: white;
+            background-color: #004d40;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .image-column, .quiz-column {
+                width: 100%;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-column">
+            <img src="https://wallpapers.com/images/high/inside-out-3840-x-2400-background-lfie6a2p6edw2pme.webp" alt="Divertidamente">
+        </div>
+        <div class="quiz-column">
+            <div class="quiz-container">
+                <h1>Quiz das Emoções</h1>
+                <div id="question-container">
+                    <h2 id="question">Pergunta aparecerá aqui</h2>
+                    <div id="answer-buttons" class="btn-container">
+                        <button class="btn" onclick="showEmotion('alegria')">Alegria</button>
+                        <button class="btn" onclick="showEmotion('medo')">Medo</button>
+                        <button class="btn" onclick="showEmotion('tristeza')">Tristeza</button>
+                        <button class="btn" onclick="showEmotion('raiva')">Raiva</button>
+                        <button class="btn" onclick="showEmotion('nojo')">Nojo</button>
+                    </div>
+                </div>
+                <div id="feedback"></div>
+                <div id="result-container">
+                    <img id="emotion-img" src="" alt="Personagem" style="display:none;">
+                </div>
+                <button id="next-btn" class="next-btn" onclick="nextQuestion()">Próxima Pergunta</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "Você ganhou um sorvete! Como você se sente?",
+            "Seu brinquedo favorito quebrou. Como você se sente?",
+            "Você está no escuro, sozinho. Como você se sente?",
+            "Você fez um desenho bonito. Como você se sente?",
+            "Alguém falou algo que você não gostou. Como você se sente?",
+            "Você encontrou um inseto no seu prato. Como você se sente?",
+            "Você viu seu melhor amigo depois de muito tempo. Como você se sente?",
+            "Você está em um lugar muito alto. Como você se sente?",
+            "Alguém riu de você na escola. Como você se sente?",
+            "Você ganhou um presente surpresa. Como você se sente?"
+        ];
+
+        const correctAnswers = [
+            'alegria', // Resposta correta para a primeira pergunta
+            'tristeza', // Resposta correta para a segunda pergunta
+            'medo', // Resposta correta para a terceira pergunta
+            'alegria', // Resposta correta para a quarta pergunta
+            'raiva', // Resposta correta para a quinta pergunta
+            'nojo', // Resposta correta para a sexta pergunta
+            'alegria', // Resposta correta para a sétima pergunta
+            'medo', // Resposta correta para a oitava pergunta
+            'tristeza', // Resposta correta para a nona pergunta
+            'alegria' // Resposta correta para a décima pergunta
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionElement = document.getElementById('question');
+            const imageElement = document.getElementById('emotion-img');
+            const nextButton = document.getElementById('next-btn');
+            const feedbackElement = document.getElementById('feedback');
+
+            // Esconder a imagem, o botão de próxima pergunta e o feedback
+            imageElement.style.display = "none";
+            nextButton.style.display = "none";
+            feedbackElement.innerText = "";
+
+            // Mostrar a pergunta atual
+            questionElement.innerText = questions[currentQuestionIndex];
+        }
+
+        function showEmotion(emotion) {
+            const imageElement = document.getElementById('emotion-img');
+            const feedbackElement = document.getElementById('feedback');
+
+            // Verificar a resposta
+            if (emotion === correctAnswers[currentQuestionIndex]) {
+                feedbackElement.innerText = "Você acertou!";
+                imageElement.style.display = "block";
+
+                switch (emotion) {
+                    case 'alegria':
+                        imageElement.src = 'https://i.pinimg.com/736x/9c/4c/e6/9c4ce6959c1d65f60f6f1730300739a0.jpg'; // Imagem da Alegria
+                        break;
+                    case 'medo':
+                        imageElement.src = 'https://www.ocamundongo.com.br/wp-content/uploads/2015/05/divertida-mente-poster-medo-camundongo.jpg'; // Imagem do Medo
+                        break;
+                    case 'tristeza':
+                        imageElement.src = 'https://i.pinimg.com/originals/e9/36/48/e936487162d8103bb3e33cc6f9f13126.jpg'; // Imagem da Tristeza
+                        break;
+                    case 'raiva':
+                        imageElement.src = 'https://uploads.jovemnerd.com.br/wp-content/uploads/2024/06/004_raiva__076jh4m65-760x425.jpg'; // Imagem da Raiva
+                        break;
+                    case 'nojo':
+                        imageElement.src = 'https://miro.medium.com/v2/resize:fit:1400/0*1HcvZ6m5jfshlYle'; // Imagem do Nojo
+                        break;
+                    default:
+                        imageElement.src = '';
+                }
+
+                // Mostrar o botão de próxima pergunta
+                document.getElementById('next-btn').style.display = "inline-block";
+            } else {
+                feedbackElement.innerText = "Tente novamente.";
+                imageElement.style.display = "none";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                document.getElementById('question-container').innerHTML = "<h2>Obrigado por participar!</h2>";
+            }
+        }
+
+        // Iniciar o quiz ao carregar a página
+        startQuiz();
+    </script>
+    <footer>ideia de Gilmara Wanaessa, codificado por J.Felipe</footer>
+</body>
+</html>
